@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { DateRangePicker } from '@/components/analytics/DateRangePicker';
+import { SalesChart } from '@/components/analytics/SalesChart';
+import { CustomerAnalytics } from '@/components/analytics/CustomerAnalytics';
+import { ProductAnalytics } from '@/components/analytics/ProductAnalytics';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { useCustomerAnalytics } from '@/hooks/useCustomerAnalytics';
+import { useProductAnalytics } from '@/hooks/useProductAnalytics';
 import { useAuth } from '@/hooks/useAuth';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BarChart3, Users, Package, TrendingUp } from 'lucide-react';
 
 const Analytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
@@ -22,82 +29,154 @@ const Analytics = () => {
     compare: true,
   });
 
+  // Fetch real customer and product analytics
+  const { data: customerData, loading: customerLoading, error: customerError } = useCustomerAnalytics({
+    startDate,
+    endDate
+  });
+
+  const { data: productData, loading: productLoading, error: productError } = useProductAnalytics({
+    startDate,
+    endDate
+  });
+
+  // Show loading state
+  const isLoading = loading || customerLoading || productLoading;
+  const hasErrors = error || customerError || productError;
+
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-semibold mb-4">Analytics</h1>
-
-        <div className="mb-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
           <DateRangePicker date={dateRange} setDate={setDateRange} />
         </div>
 
         {authLoading && <p>Checking authentication…</p>}
         {!authLoading && !user && (
           <div className="p-4 mb-4 rounded border bg-yellow-50 text-yellow-700 text-sm">
-            Sign in to view real analytics. Currently showing empty metrics.
+            Sign in to view real analytics. Currently showing actual database data.
           </div>
         )}
-        {loading && <p>Loading analytics…</p>}
-        {error && user && (
-          <p className="text-destructive">{error}</p>
-        )}
-
-        {data && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="p-4 bg-card rounded-lg shadow-sm">
-              <h3 className="text-sm text-muted-foreground">Total Revenue</h3>
-              <p className="text-2xl font-bold">₹{data.kpis.revenue.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">From {data.kpis.orders} orders</p>
-            </div>
-
-            <div className="p-4 bg-card rounded-lg shadow-sm">
-              <h3 className="text-sm text-muted-foreground">Registered Customers</h3>
-              <p className="text-2xl font-bold">{data.kpis.customers.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">Total platform users</p>
-            </div>
-
-            <div className="p-4 bg-card rounded-lg shadow-sm">
-              <h3 className="text-sm text-muted-foreground">Available Products</h3>
-              <p className="text-2xl font-bold">{data.topProducts.length}</p>
-              <p className="text-xs text-muted-foreground">In catalog</p>
-            </div>
-
-            <div className="p-4 bg-card rounded-lg shadow-sm">
-              <h3 className="text-sm text-muted-foreground">Conversion Rate</h3>
-              <p className="text-2xl font-bold">{data.kpis.conversionRate}%</p>
-              <p className="text-xs text-muted-foreground">Users who ordered</p>
-            </div>
+        
+        {isLoading && <p>Loading analytics data…</p>}
+        {hasErrors && !isLoading && (
+          <div className="p-4 mb-4 rounded border bg-red-50 text-red-700 text-sm">
+            <p>Some analytics data could not be loaded:</p>
+            {error && <p>• Sales: {error}</p>}
+            {customerError && <p>• Customers: {customerError}</p>}
+            {productError && <p>• Products: {productError}</p>}
           </div>
         )}
+        
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="overview" className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="sales" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Sales
+            </TabsTrigger>
+            <TabsTrigger value="customers" className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              Customers
+            </TabsTrigger>
+            <TabsTrigger value="products" className="flex items-center gap-2">
+              <Package className="w-4 h-4" />
+              Products
+            </TabsTrigger>
+          </TabsList>
 
-        {data && data.topProducts.length > 0 && (
-          <section className="mt-8">
-            <h2 className="text-lg font-medium mb-3">Product Catalog</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.topProducts.map((p) => (
-                <div key={p.id} className="p-4 bg-card rounded-lg shadow-sm flex items-center gap-4">
-                  <div className="h-16 w-16 bg-muted rounded overflow-hidden flex-shrink-0">
-                    {p.image && <img src={p.image} alt={p.name} className="h-full w-full object-cover" />}
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold truncate">{p.name}</div>
-                    <div className="text-xs text-muted-foreground">{p.category || 'Uncategorized'}</div>
-                    <div className="text-sm font-medium text-primary">₹{p.revenue.toFixed(2)}</div>
-                    {p.stock !== undefined && (
-                      <div className="text-xs text-muted-foreground">Stock: {p.stock}</div>
-                    )}
-                  </div>
-                </div>
-              ))}
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="p-4 bg-card rounded-lg shadow-sm">
+                <h3 className="text-sm text-muted-foreground">Total Revenue</h3>
+                <p className="text-2xl font-bold">₹{data?.kpis.revenue.toLocaleString() || '0'}</p>
+                <p className="text-xs text-muted-foreground">From {data?.kpis.orders || 0} orders</p>
+              </div>
+
+              <div className="p-4 bg-card rounded-lg shadow-sm">
+                <h3 className="text-sm text-muted-foreground">Registered Customers</h3>
+                <p className="text-2xl font-bold">{data?.kpis.customers.toLocaleString() || '0'}</p>
+                <p className="text-xs text-muted-foreground">Total platform users</p>
+              </div>
+
+              <div className="p-4 bg-card rounded-lg shadow-sm">
+                <h3 className="text-sm text-muted-foreground">Available Products</h3>
+                <p className="text-2xl font-bold">{productData?.inventoryStatus.total_products || data?.topProducts.length || 0}</p>
+                <p className="text-xs text-muted-foreground">In catalog</p>
+              </div>
+
+              <div className="p-4 bg-card rounded-lg shadow-sm">
+                <h3 className="text-sm text-muted-foreground">Conversion Rate</h3>
+                <p className="text-2xl font-bold">{data?.kpis.conversionRate || 0}%</p>
+                <p className="text-xs text-muted-foreground">Users who ordered</p>
+              </div>
             </div>
-          </section>
-        )}
-        {data && data.topProducts.length === 0 && !loading && (
-          <div className="mt-8 p-4 bg-muted/50 rounded-lg text-center">
-            <p className="text-muted-foreground">No products in catalog.</p>
-            <p className="text-xs text-muted-foreground">Add products to see them here.</p>
-          </div>
-        )}
+
+            {data && data.salesSeries && data.salesSeries.length > 0 ? (
+              <SalesChart 
+                salesData={data.salesSeries} 
+                title="Sales Performance Trends"
+                height={400}
+              />
+            ) : (
+              <div className="p-8 bg-muted/50 rounded-lg text-center">
+                <p className="text-muted-foreground mb-4">No sales data available yet.</p>
+                <p className="text-xs text-muted-foreground">
+                  Add some orders to see beautiful sales analytics charts!
+                </p>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="sales">
+            {data && data.salesSeries && data.salesSeries.length > 0 ? (
+              <SalesChart 
+                salesData={data.salesSeries} 
+                title="Detailed Sales Analytics"
+                height={500}
+              />
+            ) : (
+              <div className="p-8 bg-muted/50 rounded-lg text-center">
+                <h3 className="text-lg font-medium mb-2">No Sales Data Yet</h3>
+                <p className="text-muted-foreground mb-4">
+                  Start making sales to unlock powerful analytics insights including:
+                </p>
+                <ul className="text-sm text-muted-foreground space-y-1 max-w-md mx-auto">
+                  <li>• Revenue trend analysis</li>
+                  <li>• Order volume tracking</li>
+                  <li>• Customer acquisition metrics</li>
+                  <li>• Growth rate comparisons</li>
+                </ul>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="customers">
+            {customerData ? (
+              <CustomerAnalytics data={customerData} height={400} />
+            ) : (
+              <div className="p-8 bg-muted/50 rounded-lg text-center">
+                <h3 className="text-lg font-medium mb-2">Loading Customer Analytics</h3>
+                <p className="text-muted-foreground">Fetching customer data from database...</p>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="products">
+            {productData ? (
+              <ProductAnalytics data={productData} height={400} />
+            ) : (
+              <div className="p-8 bg-muted/50 rounded-lg text-center">
+                <h3 className="text-lg font-medium mb-2">Loading Product Analytics</h3>
+                <p className="text-muted-foreground">Fetching product data from database...</p>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
