@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+bun.lockb
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Build / Output
+dist/
+build/
+.vite/
+.vercel/
+.next/
+coverage/
+.tmp/
+temp/
+
+# Environment & Secrets
+.env
+.env.*
+.supabase
+supabase/.temp/
+supabase/.cache/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# TypeScript
+*.tsbuildinfo
+
+# Assets generated
+*.DS_Store
+
+# Misc
+index_content.txt
