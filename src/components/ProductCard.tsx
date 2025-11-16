@@ -64,7 +64,7 @@ export const ProductCard = ({
   return (
     <Card
       className={`group relative flex flex-col overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 ease-in-out hover:-translate-y-2 bg-background border border-border/50 cursor-pointer ${className}`}
-      onClick={() => onViewProduct ? onViewProduct(product.id) : navigate(`/product/${product.id}`)}
+      onClick={() => navigate(`/product/${product.id}`)}
     >
       <CardContent className="p-0 flex flex-col flex-grow">
         <div className="relative">

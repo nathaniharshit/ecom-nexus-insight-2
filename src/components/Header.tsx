@@ -209,6 +209,16 @@ export const Header = ({
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-1 sm:gap-2">
+          {/* Insights (public) */}
+          <Button
+            variant="ghost"
+            className="hidden md:flex rounded-xl hover:bg-accent transition-all"
+            onClick={() => navigate('/analytics')}
+          >
+            <TrendingUp className="w-4 h-4 mr-2" />
+            Insights
+          </Button>
+
           {/* Cart */}
           <TooltipProvider delayDuration={300}>
             <Tooltip>

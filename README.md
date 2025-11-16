@@ -60,6 +60,31 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Admin Analytics Dashboard
+
+Features:
+- KPI cards (Revenue, Orders, AOV, Customers, Conversion, Refunds)
+- Period-over-period trend deltas
+- Revenue area chart (daily granularity)
+- Top products table (sales, revenue, stock, conversion)
+- Date range selection & manual refresh
+- JSON export for offline analysis
+- Caching of results per date range
+
+Add route (react-router):
+```tsx
+import { AdminAnalyticsPage } from './pages/AdminAnalytics';
+// ...
+<Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
+```
+
+Install charts:
+```bash
+npm i recharts
+```
+
+Replace mock data in useAnalytics.ts with real Supabase queries when ready.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/568f1ce6-72f4-40f3-abaa-be0217cc4119) and click on Share -> Publish.
