@@ -10,6 +10,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Analytics from "./pages/Analytics";
 import ProductDetails from "@/pages/ProductDetails";
 import Wishlist from "@/pages/Wishlist";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/checkout-success" element={<CheckoutSuccess />} />
                 <Route path="/profile" element={<ProfileDashboard />} />
                 <Route path="/special-offers" element={<SpecialOffers />} />
+                <Route path="/analytics" element={<Analytics />} />
 
                 {/* Admin Routes */}
                 <Route path="/admin" element={<AdminDashboard />} />
