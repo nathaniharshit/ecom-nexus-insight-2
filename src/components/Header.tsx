@@ -106,7 +106,7 @@ export const Header = ({
           <div className="relative">
             <img
               src="https://i.pinimg.com/736x/f9/d9/50/f9d9500f878c6276356c9ce3eb00c882.jpg"
-              alt="FlashCart logo"
+              alt="SmartCart logo"
               className="h-9 sm:h-11 w-auto rounded-lg transition-transform duration-200 group-hover:scale-105"
               loading="eager"
               decoding="async"
@@ -114,7 +114,7 @@ export const Header = ({
             <div className="absolute inset-0 rounded-lg bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
           </div>
           <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/70 transition-all duration-200">
-            FlashCart
+            SmartCart
           </span>
         </div>
 

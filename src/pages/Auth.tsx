@@ -129,7 +129,7 @@ const Auth = () => {
               <ShoppingBag className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">FlashCart</h1>
+              <h1 className="text-3xl font-bold tracking-tight">SmartCart</h1>
               <p className="text-blue-100 text-sm">Your Premier Shopping Destination</p>
             </div>
           </div>
@@ -141,7 +141,7 @@ const Auth = () => {
               <span className="block text-yellow-300">Online Shopping</span>
             </h2>
             <p className="text-blue-100 text-lg leading-relaxed">
-              Join thousands of satisfied customers who trust FlashCart for their shopping needs. 
+              Join thousands of satisfied customers who trust SmartCart for their shopping needs. 
               Experience lightning-fast delivery, unbeatable prices, and premium customer service.
             </p>
           </div>
@@ -187,13 +187,13 @@ const Auth = () => {
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center">
               <ShoppingBag className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">FlashCart</span>
+            <span className="text-2xl font-bold text-gray-900">SmartCart</span>
           </div>
 
           <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="text-center pb-6">
               <CardTitle className="text-3xl font-bold text-gray-900">
-                {success ? 'Welcome to FlashCart!' : 'Welcome Back'}
+                {success ? 'Welcome to SmartCart!' : 'Welcome Back'}
               </CardTitle>
               <CardDescription className="text-gray-600 text-base">
                 {success 
@@ -254,7 +254,7 @@ const Auth = () => {
                       disabled={isLoading}
                     >
                       {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                      Sign In to FlashCart
+                      Sign In to SmartCart
                     </Button>
                   </form>
                 </TabsContent>
@@ -316,7 +316,7 @@ const Auth = () => {
                       disabled={isLoading}
                     >
                       {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                      Create FlashCart Account
+                      Create SmartCart Account
                     </Button>
                   </form>
                 </TabsContent>

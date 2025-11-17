@@ -545,7 +545,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold text-lg mb-4">FlashCart</h3>
+              <h3 className="font-bold text-lg mb-4">SmartCart</h3>
               <p className="text-muted-foreground text-sm">Your one-stop shop for all your needs.</p>
             </div>
             <div>
@@ -571,13 +571,13 @@ const Index = () => {
               <address className="text-sm text-muted-foreground not-italic">
                 <p>123 Commerce St.</p>
                 <p>Anytown, AT 12345</p>
-                <p className="mt-2">Email: support@flashcart.com</p>
+                <p className="mt-2">Email: support@SmartCart.com</p>
                 <p>Phone: (123) 456-7890</p>
               </address>
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 FlashCart. All rights reserved.</p>
+            <p>&copy; 2024 SmartCart. All rights reserved.</p>
           </div>
         </div>
       </footer>

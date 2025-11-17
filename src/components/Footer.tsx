@@ -44,11 +44,11 @@ export const Footer = () => {
             >
               <img
                 src="https://i.pinimg.com/736x/f9/d9/50/f9d9500f878c6276356c9ce3eb00c882.jpg"
-                alt="FlashCart logo"
+                alt="SmartCart logo"
                 className="h-9 w-auto rounded-lg"
               />
               <span className="text-xl font-bold text-white group-hover:text-primary transition-colors">
-                FlashCart
+                SmartCart
               </span>
             </div>
             <p className="mt-4 text-sm text-gray-400">
@@ -102,7 +102,7 @@ export const Footer = () => {
         {/* Bottom section: Copyright and Socials */}
         <div className="py-8 border-t border-gray-700/50 flex flex-col-reverse md:flex-row items-center justify-between gap-6">
           <p className="text-sm text-gray-500 text-center md:text-left">
-            © {new Date().getFullYear()} FlashCart, Inc. All rights reserved.
+            © {new Date().getFullYear()} SmartCart, Inc. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <a href="#" className="text-gray-400 hover:text-primary transition-colors"><Twitter className="h-5 w-5" /></a>
