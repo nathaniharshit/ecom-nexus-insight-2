@@ -196,7 +196,7 @@ const Index = () => {
                 <Truck className="w-6 h-6 md:w-8 md:h-8 text-success" />
               </div>
               <h3 className="text-base md:text-lg font-semibold mb-1 md:mb-2">Free Shipping</h3>
-              <p className="text-xs md:text-sm text-muted-foreground">Free shipping on all orders over $50</p>
+              <p className="text-xs md:text-sm text-muted-foreground">Free shipping on all orders over ₹50</p>
             </div>
 
             <div className="text-center animate-fade-in p-4 bg-background/50 rounded-lg shadow-sm">
@@ -281,8 +281,8 @@ const Index = () => {
                   
                   {priceRange !== 'all' && (
                     <Badge variant="outline" className="flex items-center gap-1 bg-background">
-                      {priceRange === 'under-500' ? 'Under $500' : 
-                       priceRange === '500-1000' ? '$500-$1000' : 'Over $1000'}
+                      {priceRange === 'under-500' ? 'Under ₹500' : 
+                       priceRange === '500-1000' ? '₹500-₹1000' : 'Over ₹1000'}
                       <X className="w-3 h-3 cursor-pointer" onClick={() => setPriceRange('all')} />
                     </Badge>
                   )}
@@ -358,7 +358,7 @@ const Index = () => {
                         checked={priceRange === 'under-500'} 
                         onChange={() => setPriceRange('under-500')} 
                       />
-                      <span>Under $500</span>
+                      <span>Under ₹500</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input 
@@ -366,7 +366,7 @@ const Index = () => {
                         checked={priceRange === '500-1000'} 
                         onChange={() => setPriceRange('500-1000')} 
                       />
-                      <span>$500 - $1000</span>
+                      <span>₹500 - ₹1000</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input 
@@ -374,7 +374,7 @@ const Index = () => {
                         checked={priceRange === 'over-1000'} 
                         onChange={() => setPriceRange('over-1000')} 
                       />
-                      <span>Over $1000</span>
+                      <span>Over ₹1000</span>
                     </label>
                   </div>
                 </div>
@@ -465,7 +465,7 @@ const Index = () => {
                       
                       <div className="flex items-baseline gap-2 mb-3">
                         <span className="font-semibold">
-                          ${product.discount_percent && product.discount_percent > 0 
+                          ₹{product.discount_percent && product.discount_percent > 0 
                             ? (product.price * (1 - product.discount_percent / 100)).toFixed(2)
                             : product.price.toFixed(2)
                           }
@@ -473,7 +473,7 @@ const Index = () => {
                         
                         {product.discount_percent && product.discount_percent > 0 && (
                           <span className="text-muted-foreground text-sm line-through">
-                            ${product.price.toFixed(2)}
+                            ₹{product.price.toFixed(2)}
                           </span>
                         )}
                       </div>
