@@ -137,33 +137,24 @@ export const ProductCard = ({
               size="lg"
               variant="outline"
               className="flex-1"
-              onClick={() => setIsQuickViewOpen(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsQuickViewOpen(true);
+              }}
             >
               <Eye className="w-5 h-5 mr-2" />
               Quick View
             </Button>
 
-            {/* Add to Cart Button */}
-            {showAddToCart && (
-              <Button
-                size="lg"
-                variant={product.stock === 0 ? "secondary" : "default"}
-                className="flex-1"
-                onClick={handleAddToCart}
-                disabled={isAddingToCart || product.stock === 0}
-              >
-                {isAddingToCart ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : product.stock === 0 ? (
-                  'Out of Stock'
-                ) : (
-                  <>
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Add to Cart
-                  </>
-                )}
-              </Button>
-            )}
+            {/* View Product Button */}
+            <Button
+              size="lg"
+              variant="default"
+              className="flex-1"
+              onClick={() => navigate(`/product/${product.id}`)}
+            >
+              View Product
+            </Button>
           </div>
         </CardContent>
       </Card>

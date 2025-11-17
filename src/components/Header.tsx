@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { User, Menu, Search, Heart, X, ShoppingCart, TrendingUp, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
@@ -49,6 +49,8 @@ export const Header = ({
   const { wishlistItems } = useWishlist();
   const { getCartItemCount } = useCart();
 
+  const searchResultsRef = React.useRef<HTMLDivElement>(null);
+
   const handleLogoClick = () => {
     window.location.href = '/';
   };
@@ -69,6 +71,11 @@ export const Header = ({
       );
       setSearchResults(filtered.slice(0, 5));
       setIsSearchOpen(true);
+
+      // Scroll to the search results container
+      if (searchResultsRef.current) {
+        searchResultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     } else {
       setSearchResults([]);
       setIsSearchOpen(false);
@@ -85,6 +92,11 @@ export const Header = ({
         onSearch(searchQuery);
       }
       setIsSearchOpen(false);
+
+      // Scroll to the search results container
+      if (searchResultsRef.current) {
+        searchResultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
@@ -352,6 +364,22 @@ export const Header = ({
             className="pl-10 h-10 bg-muted/30 border border-border/50 rounded-xl focus:bg-background focus:border-primary/50 transition-all"
           />
         </form>
+      </div>
+
+      {/* Search Results Section */}
+      <div ref={searchResultsRef} className="mt-4">
+        {isSearchOpen && searchResults.length > 0 && (
+          <div className="container mx-auto px-4">
+            <h2 className="text-lg font-semibold mb-4">Search Results</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {searchResults.map(product => (
+                <div key={product.id} onClick={() => handleProductClick(product.id)}>
+                  <p>{product.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
