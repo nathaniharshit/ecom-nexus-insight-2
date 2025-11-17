@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, ShoppingCart, Heart, Star } from 'lucide-react';
+import { Loader2, ShoppingCart, Heart, Star, Eye } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Product } from '../hooks/useProducts';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
+import { ProductQuickViewModal } from './ProductQuickViewModal';
 
 interface ProductCardProps {
   product: Product;
@@ -27,6 +28,7 @@ export const ProductCard = ({
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
 
   const handleAddToCart = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -37,7 +39,7 @@ export const ProductCard = ({
       setIsAddingToCart(false);
     }, 800);
   };
-  
+
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isInWishlist(product.id)) {
@@ -52,8 +54,8 @@ export const ProductCard = ({
       });
     }
   };
-  
-  const discountedPrice = product.discount_percent 
+
+  const discountedPrice = product.discount_percent
     ? product.price - (product.price * (product.discount_percent / 100))
     : null;
 
@@ -62,94 +64,117 @@ export const ProductCard = ({
   const isWishlisted = isInWishlist(product.id);
 
   return (
-    <Card
-      className={`group relative flex flex-col overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 ease-in-out hover:-translate-y-2 bg-background border border-border/50 cursor-pointer ${className}`}
-      onClick={() => navigate(`/product/${product.id}`)}
-    >
-      <CardContent className="p-0 flex flex-col flex-grow">
-        <div className="relative">
-          <div className="aspect-[4/3] w-full overflow-hidden bg-muted/30">
-            <img
-              src={product.image_url || product.images?.[0] || '/placeholder.svg'}
-              alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-              loading="lazy"
-            />
-          </div>
+    <>
+      <Card
+        className={`group relative flex flex-col overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-1 bg-background border border-border/50 cursor-pointer ${className}`}
+      >
+        <CardContent className="p-0 flex flex-col flex-grow">
+          {/* Product Image */}
+          <div className="relative">
+            <div className="aspect-[4/3] w-full overflow-hidden bg-muted/30 rounded-t-xl">
+              <img
+                src={product.image_url || product.images?.[0] || '/placeholder.svg'}
+                alt={product.name}
+                className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                loading="lazy"
+              />
+            </div>
 
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
-            {discountedPrice && (
-              <Badge variant="destructive" className="text-xs font-bold shadow-lg">
-                -{product.discount_percent}%
-              </Badge>
-            )}
-            {product.stock === 0 && (
-              <Badge variant="secondary" className="text-xs font-bold shadow-lg bg-black/60 text-white border-none">
-                Out of Stock
-              </Badge>
-            )}
-          </div>
-
-          {/* Wishlist Button */}
-          <Button
-            size="icon"
-            variant="secondary"
-            className="absolute top-3 right-3 h-9 w-9 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background/80 transition-all duration-300 scale-90 opacity-0 group-hover:scale-100 group-hover:opacity-100"
-            onClick={handleWishlistToggle}
-          >
-            <Heart className={`w-5 h-5 transition-all ${isWishlisted ? 'text-red-500 fill-red-500' : 'text-foreground/70'}`} />
-          </Button>
-        </div>
-
-        <div className="p-4 flex flex-col flex-grow">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{product.category}</p>
-          <h3 className="font-semibold text-base text-foreground mt-1.5 line-clamp-2 flex-grow">{product.name}</h3>
-          
-          {/* Rating */}
-          <div className="flex items-center gap-1.5 mt-2">
-            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-            <span className="text-sm font-bold text-foreground">{rating.toFixed(1)}</span>
-            <span className="text-xs text-muted-foreground">({ratingCount} reviews)</span>
-          </div>
-
-          {/* Price */}
-          <div className="flex items-baseline gap-2 mt-3">
-            <span className="text-xl font-bold text-primary">
-              ₹{discountedPrice ? discountedPrice.toFixed(2) : product.price.toFixed(2)}
-            </span>
-            {discountedPrice && (
-              <span className="text-sm text-muted-foreground line-through">
-                ₹{product.price.toFixed(2)}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Add to Cart Button - Revealed on hover */}
-        {showAddToCart && (
-          <div className="p-4 pt-0 mt-auto">
-            <Button
-              size="lg"
-              variant={product.stock === 0 ? "secondary" : "default"}
-              className="w-full font-bold transition-all duration-300 transform-gpu opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0"
-              onClick={handleAddToCart}
-              disabled={isAddingToCart || product.stock === 0}
-            >
-              {isAddingToCart ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : product.stock === 0 ? (
-                'Out of Stock'
-              ) : (
-                <>
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Add to Cart
-                </>
+            {/* Badges */}
+            <div className="absolute top-3 left-3 flex flex-col gap-2">
+              {discountedPrice && (
+                <Badge variant="destructive" className="text-xs font-bold shadow-lg">
+                  -{product.discount_percent}%
+                </Badge>
               )}
+              {product.stock === 0 && (
+                <Badge variant="secondary" className="text-xs font-bold shadow-lg bg-black/60 text-white border-none">
+                  Out of Stock
+                </Badge>
+              )}
+            </div>
+
+            {/* Wishlist Button */}
+            <Button
+              size="icon"
+              variant="secondary"
+              className="absolute top-3 right-3 h-9 w-9 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background/80 transition-all duration-300 scale-90 opacity-0 group-hover:scale-100 group-hover:opacity-100"
+              onClick={handleWishlistToggle}
+            >
+              <Heart className={`w-5 h-5 transition-all ${isWishlisted ? 'text-red-500 fill-red-500' : 'text-foreground/70'}`} />
             </Button>
           </div>
-        )}
-      </CardContent>
-    </Card>
+
+          {/* Product Details */}
+          <div className="p-4 flex flex-col flex-grow">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{product.category}</p>
+            <h3 className="font-semibold text-base text-foreground mt-1.5 line-clamp-2 flex-grow">{product.name}</h3>
+            
+            {/* Rating */}
+            <div className="flex items-center gap-1.5 mt-2">
+              <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+              <span className="text-sm font-bold text-foreground">{rating.toFixed(1)}</span>
+              <span className="text-xs text-muted-foreground">({ratingCount} reviews)</span>
+            </div>
+
+            {/* Price */}
+            <div className="flex items-baseline gap-2 mt-3">
+              <span className="text-xl font-bold text-primary">
+                ₹{discountedPrice ? discountedPrice.toFixed(2) : product.price.toFixed(2)}
+              </span>
+              {discountedPrice && (
+                <span className="text-sm text-muted-foreground line-through">
+                  ₹{product.price.toFixed(2)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="p-4 pt-0 mt-auto flex gap-2">
+            {/* Quick View Button */}
+            <Button
+              size="lg"
+              variant="outline"
+              className="flex-1"
+              onClick={() => setIsQuickViewOpen(true)}
+            >
+              <Eye className="w-5 h-5 mr-2" />
+              Quick View
+            </Button>
+
+            {/* Add to Cart Button */}
+            {showAddToCart && (
+              <Button
+                size="lg"
+                variant={product.stock === 0 ? "secondary" : "default"}
+                className="flex-1"
+                onClick={handleAddToCart}
+                disabled={isAddingToCart || product.stock === 0}
+              >
+                {isAddingToCart ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : product.stock === 0 ? (
+                  'Out of Stock'
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    Add to Cart
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Quick View Modal */}
+      {isQuickViewOpen && (
+        <ProductQuickViewModal
+          product={product}
+          onClose={() => setIsQuickViewOpen(false)}
+        />
+      )}
+    </>
   );
-}
+};
